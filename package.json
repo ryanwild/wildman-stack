@@ -1,0 +1,36 @@
+{
+  "author": "Ryan Wild",
+  "bugs": {
+    "url": "https://github.com/ryanwild/wildman-graphql-stack/issues"
+  },
+  "description": "",
+  "homepage": "https://github.com/ryanwild/wildman-graphql-stack#readme",
+  "license": "MIT",
+  "name": "wildman-graphql-stack",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ryanwild/wildman-graphql-stack.git"
+  },
+  "scripts": {
+    "test": "echo \"Warning: no test specified\" && exit 0"
+  },
+  "type": "module",
+  "version": "0.0.1",
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "^0.25.0"
+    },
+    "next": {
+      "postcss": "^8.5.14"
+    },
+    "auth": {
+      "@mrleebo/prisma-ast": "0.16.0"
+    }
+  },
+  "workspaces": [
+    "auth",
+    "backend",
+    "shared",
+    "userui"
+  ]
+}

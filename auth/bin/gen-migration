@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+
+config_path="$(dirname "$(realpath "$0")")/../src/lib/auth.ts"
+filename=$(date +"%Y-%m-%d-%H-%M-%S.sql")
+output_path=$(dirname "$(realpath "$0")/../migrations/")
+npx auth@latest --yes generate --config="${config_path}" --dialect="postgresql" --output="${output_path}/${filename}"

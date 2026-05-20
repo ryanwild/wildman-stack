@@ -1,0 +1,163 @@
+services:
+  db:
+    image: postgres:18.3-alpine3.23
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+    ports:
+      - "127.0.0.1:$DB_PORT:$DB_PORT"
+    volumes:
+      - db:/var/lib/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $$POSTGRES_DB -U $$POSTGRES_USER"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 90s
+    networks:
+      wms:
+
+  backend:
+    depends_on:
+      - db
+    build:
+      target: $COMPOSE_TARGET
+      context: .
+      dockerfile: ./backend/Dockerfile
+    restart: no
+    env_file: .env
+    ports:
+      - "127.0.0.1:3000:80"
+      - "127.0.0.1:9229:9229" # Debugging port
+    volumes:
+      - ./backend/drizzle/:/workspace/backend/drizzle
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./backend/src
+          target: /workspace/backend/src
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: sync+restart
+          path: ./shared
+          target: /workspace/shared
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: ./backend/package.json
+    networks:
+      wms:
+
+  auth:
+    build:
+      target: $COMPOSE_TARGET
+      context: .
+      dockerfile: ./auth/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:3001:80"
+    volumes:
+      - ./auth/migrations/:/workspace/auth/migrations/
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./auth/
+          target: /workspace/auth/
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: sync+restart
+          path: ./shared
+          target: /workspace/shared
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: sync+restart
+          path: ./shared
+          target: /workspace/shared
+          initial_sync: true
+        - action: rebuild
+          path: ./auth/package.json
+    networks:
+      wms:
+
+  userui:
+    build:
+      target: $COMPOSE_TARGET
+      context: .
+      dockerfile: ./userui/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - NEXT_ALLOWED_DEV_ORIGIN=https://wildmanstack.localhost
+    ports:
+      - "127.0.0.1:3002:80"
+    develop:
+      watch:
+        - action: sync
+          path: ./userui/app
+          target: /workspace/userui/app
+          initial_sync: true
+        - action: sync+restart
+          path: ./shared
+          target: /workspace/shared
+          initial_sync: true
+          ignore:
+            - node_modules/
+        - action: sync+restart
+          path: ./userui/next.config.ts
+          target: /workspace/userui/app/next.config.ts
+          initial_sync: true
+    networks:
+      wms:
+
+  ingress:
+    build:
+      context: .
+      dockerfile: ./ingress/Dockerfile
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "127.0.0.1:80:80"
+      - "127.0.0.1:443:443"
+      - "127.0.0.1:443:443/udp"
+    develop:
+      watch:
+        - action: sync+restart
+          path: ./ingress/config/Caddyfile
+          target: /etc/caddy/Caddyfile
+        - action: sync
+          path: ./userui/public/
+          target: /srv/
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./cert/:/data/caddy/pki/authorities/local/
+    depends_on:
+      auth:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    networks:
+      wms:
+        aliases:
+          - wildmanstack.localhost
+
+volumes:
+  db:
+  caddy_data:
+  caddy_config:
+
+networks:
+  wms:
+    driver: bridge
+    driver_opts:
+      enable_ipv4: "true"
+      enable_ipv6: "false"
+      com.docker.network.bridge.host_binding_ipv4: "127.0.0.1"

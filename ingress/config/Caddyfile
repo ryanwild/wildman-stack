@@ -1,0 +1,43 @@
+{
+	debug
+}
+
+0.0.0.0:80 {
+	handle_path /health {
+		respond "ok" 200
+	}
+}
+
+{$DOMAIN} {
+	tls internal
+
+	handle_path /graphql* {
+		rewrite * /graphql
+		reverse_proxy http://backend {
+      header_up Connection {http.request.header.Connection}
+      header_up Upgrade {http.request.header.Upgrade}
+    }
+	}
+
+	handle_path /auth/* {
+    rewrite * /api/auth{path}?{query}
+		reverse_proxy http://auth {
+			header_up x-forwarded-host auth
+			header_up x-forwarded-proto https
+			header_up x-forwarded-port 443
+		}
+	}
+
+  handle_path /_next/webpack-hmr {
+    rewrite * /_next/webpack-hmr
+    reverse_proxy http://userui {
+      header_up Connection {http.request.header.Connection}
+      header_up Upgrade {http.request.header.Upgrade}
+    }
+  }
+
+	# Everything else should go to the frontend
+	handle {
+		reverse_proxy http://userui
+	}
+}

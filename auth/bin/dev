@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+main_path="$(dirname "$(realpath "$0")")/../src/main.ts"
+
+NODE_ENV=development \
+  npm run --workspace=auth "tsc-check" &&
+  node --experimental-strip-types --inspect=0.0.0.0:9229 "$main_path"
