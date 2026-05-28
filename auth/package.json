@@ -19,8 +19,8 @@
   "main": "index.js",
   "name": "auth",
   "scripts": {
-    "gen-migration": "npx --yes auth@latest generate --config=src/lib/auth.ts --dialect=postgresql --output=migrations/latest.sql --yes",
-    "migrate": "npx --yes auth@latest migrate --config=src/lib/auth.ts --yes",
+    "gen-migration": "npx --yes auth@1.6.11 generate --config=src/lib/auth.ts --dialect=postgresql --output=migrations/latest.sql --yes",
+    "migrate": "npx --yes auth@1.6.11 migrate --config=src/lib/auth.ts --yes",
     "test": "echo \"Warning: no test specified\" && exit 0",
     "tsc-check": "tsc --noEmit true",
     "tsc-prod": "tsc --project tsconfig.prod.json"

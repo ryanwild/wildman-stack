@@ -54,7 +54,6 @@ fastify.route({
 
       // Process authentication request
       const response = await auth.handler(req);
-      console.log(await response.json());
       // Forward response to client
       reply.status(response.status);
       response.headers.forEach((value, key) => reply.header(key, value));

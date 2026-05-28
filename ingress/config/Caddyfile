@@ -1,8 +1,4 @@
-{
-	debug
-}
-
-0.0.0.0:80 {
+127.0.0.1:80 {
 	handle_path /health {
 		respond "ok" 200
 	}
@@ -22,6 +18,8 @@
 	handle_path /auth/* {
     rewrite * /api/auth{path}?{query}
 		reverse_proxy http://auth {
+      header_up origin https://{http.request.host}
+      header_up host {http.request.host}
 			header_up x-forwarded-host auth
 			header_up x-forwarded-proto https
 			header_up x-forwarded-port 443
