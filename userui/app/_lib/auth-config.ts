@@ -1,6 +1,4 @@
-import { createAuthClient } from "better-auth/react";
-
-const client = createAuthClient({
+const config = {
   // these values are hardcoded to prevent any environment variables
   // leaking into client side code
   // TODO: make these values dynamic
@@ -9,5 +7,10 @@ const client = createAuthClient({
   fetchOptions: {
     baseURL: "https://wildmanstack.localhost/auth",
   },
-});
-export const { signIn, signUp, useSession } = client;
+  advanced: {
+    useSecureCookies: true,
+    cookiePrefix: "_wms",
+  },
+};
+
+export default config;

@@ -16,4 +16,8 @@ export const auth = betterAuth({
   telemetry: {
     enabled: false,
   },
+  advanced: {
+    useSecureCookies: true,
+    cookiePrefix: "_wms",
+  },
 });

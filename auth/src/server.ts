@@ -41,7 +41,6 @@ fastify.route({
     try {
       // Construct request URL
       const url = new URL(request.url, `https://${request.headers.host}`);
-      console.log(">>>>>>>>>>>>>>> ?", url);
       // Convert Fastify headers to standard Headers object
       const headers = fromNodeHeaders(request.headers);
 
@@ -56,7 +55,10 @@ fastify.route({
       const response = await auth.handler(req);
       // Forward response to client
       reply.status(response.status);
-      response.headers.forEach((value, key) => reply.header(key, value));
+      response.headers.forEach((value, key) => {
+        console.log("auth headers:", key, value);
+        reply.header(key, value);
+      });
       return reply.send(response.body ? await response.text() : null);
     } catch (err) {
       fastify.log.error("Authentication error: " + err);

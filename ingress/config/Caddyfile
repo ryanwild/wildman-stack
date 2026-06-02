@@ -1,3 +1,7 @@
+{
+  debug
+}
+
 127.0.0.1:80 {
 	handle_path /health {
 		respond "ok" 200
@@ -18,7 +22,7 @@
 	handle_path /auth/* {
     rewrite * /api/auth{path}?{query}
 		reverse_proxy http://auth {
-      header_up origin https://{http.request.host}
+      header_up origin https://{$DOMAIN}
       header_up host {http.request.host}
 			header_up x-forwarded-host auth
 			header_up x-forwarded-proto https
@@ -36,6 +40,10 @@
 
 	# Everything else should go to the frontend
 	handle {
-		reverse_proxy http://userui
+		reverse_proxy http://userui {
+        # If the server set a cookie, forward it to the client
+        @authCookie header Set-Cookie *
+        header_down @authCookie Set-Cookie {header.Set-Cookie}
+      }
 	}
 }

@@ -1,10 +1,10 @@
 "use server";
 
-import { headers as getHeaders } from "next/headers";
+// import { headers as getHeaders } from "next/headers";
 import { redirect } from "next/navigation";
 import * as v from "valibot";
 import environment from "../../../shared/src/environment";
-import { signUp as betterAuthSignUp } from "../_lib/auth";
+import { signUp as betterAuthSignUp, signIn } from "../_lib/auth-server.ts";
 
 const SignUpFormSchema = v.object({
   email: v.pipe(
@@ -66,31 +66,28 @@ export async function signUp(_initialState: unknown, formData: FormData) {
       email: data.email!,
       password: data.password!,
       name: data.username!,
+      callbackURL: `https://${domain}/dashboard`,
     });
-    console.log(result, domain);
-    // const response = await fetch(`https://${domain}/auth/api/auth/register`, {
-    //   method: "POST",
-    //   headers: {
-    //     Accept: "application/json",
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(data),
-    // });
-    // state = (await response.json()) as SignUpFormState;
-    // if (!response.ok) {
-    //   console.error("Signup error:", response.status, response.statusText);
-    //   if (response.status === 409) {
-    //     const headers = await getHeaders();
-    //     const IP = headers.get("x-forwarded-for");
-    //     console.error("Attempted to Sign Up existing user, from IP:", IP);
-    //   }
-    //   state.status = "error";
-    //   return state;
-    // }
+    if (!result?.error) {
+      const signInResult = await signIn.email({
+        email: data.email!,
+        password: data.password!,
+      });
+      if (signInResult?.error) {
+        console.error(signInResult.error);
+      }
+      state.status = "success";
+    } else {
+      console.error(result?.error);
+      state.message = result?.error.message;
+      state.status = "error";
+    }
   } catch (err) {
     state.status = "error";
+    state.message = "There was an error signing up";
     console.error(err);
+    return state;
   }
-  if (state.status === "success") redirect("/login");
+  if (state.status === "success") redirect("/dashboard");
   return state;
 }
