@@ -54,6 +54,7 @@ export async function signUp(_initialState: unknown, formData: FormData) {
   const state: SignUpFormState = { status: "error", data };
   const valid = v.safeParse(SignUpFormSchema, data);
   const { DOMAIN: domain } = environment();
+  let redirectUrl = "/dashboard";
 
   if (!valid.success) {
     state.validation = v.flatten(valid.issues).nested;
@@ -75,11 +76,12 @@ export async function signUp(_initialState: unknown, formData: FormData) {
       });
       if (signInResult?.error) {
         console.error(signInResult.error);
+        redirectUrl = "/login";
       }
       state.status = "success";
     } else {
       console.error(result?.error);
-      state.message = result?.error.message;
+      state.message = result?.error?.message || "There was an error signing up";
       state.status = "error";
     }
   } catch (err) {
@@ -88,6 +90,6 @@ export async function signUp(_initialState: unknown, formData: FormData) {
     console.error(err);
     return state;
   }
-  if (state.status === "success") redirect("/dashboard");
+  if (state.status === "success") redirect(redirectUrl);
   return state;
 }
