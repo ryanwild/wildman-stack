@@ -1,13 +1,17 @@
-import { getSession } from "../_lib/auth-server.ts";
+import { authServer } from "../../lib/auth-server";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-const Page = async () => {
-  const { data, error } = await getSession();
-  if (!data || error) {
-    redirect("/login");
-  }
+export const dynamic = "force-dynamic";
 
+const Page = async () => {
+  const session = await authServer.api.getSession({
+    headers: await headers(),
+  });
+  if (!session) {
+    return redirect("/login");
+  }
   return (
     <div>
       <div className="border-b p-3">
@@ -26,7 +30,9 @@ const Page = async () => {
       </div>
 
       <div className="overflow-x-auto p-3">
-        <pre className="font-mono text-xs">{JSON.stringify(data, null, 2)}</pre>
+        <pre className="font-mono text-xs">
+          {JSON.stringify(session, null, 2)}
+        </pre>
       </div>
     </div>
   );

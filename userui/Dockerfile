@@ -36,14 +36,8 @@ CMD ["npm","run", "start"]
 
 ##### Development
 FROM ci AS development
-ENV NODE_ENV=development
 ENV WATCHPACK_POLLING=true
 ENV CHOKIDAR_USEPOLLING=true
-ENV NODE_TLS_REJECT_UNAUTHORIZED=0
-# ENV NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/
-# COPY ./cert/root.crt /usr/local/share/ca-certificates/dev.crt
-# USER root
-# RUN cat /usr/local/share/ca-certificates/dev.crt >> /etc/ssl/certs/ca-certificates.crt
 WORKDIR "/workspace/$APP_NAME"
 CMD ["npm","run", "dev"]
 

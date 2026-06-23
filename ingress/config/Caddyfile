@@ -19,17 +19,6 @@
     }
 	}
 
-	handle_path /auth/* {
-    rewrite * /api/auth{path}?{query}
-		reverse_proxy http://auth {
-      header_up origin https://{$DOMAIN}
-      header_up host {http.request.host}
-			header_up x-forwarded-host auth
-			header_up x-forwarded-proto https
-			header_up x-forwarded-port 443
-		}
-	}
-
   handle_path /_next/webpack-hmr {
     rewrite * /_next/webpack-hmr
     reverse_proxy http://userui {

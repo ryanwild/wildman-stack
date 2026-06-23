@@ -9,3 +9,9 @@
 - [ ] Clean up docker ignore
 - [ ] Clean up scripts and "bin" scripts decide what to do
 - [ ] Implement "signup" flow
+
+Add better error handling
+
+Fix Next.js cookies issue
+
+Clean up better auth client... decide if we will use server only

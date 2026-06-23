@@ -1,39 +1,64 @@
 "use client";
 
-import { Pencil2Icon, InfoCircledIcon } from "@radix-ui/react-icons";
+import { InfoCircledIcon, Pencil2Icon } from "@radix-ui/react-icons";
 import {
   Box,
   Button,
+  Callout,
   Container,
   Flex,
   Heading,
   TextField,
-  Callout,
 } from "@radix-ui/themes";
-import Form from "next/form";
+import { useRouter } from "next/navigation";
 import { Label } from "radix-ui";
-import { useActionState } from "react";
-import { signUp, SignUpFormState } from "./action";
+import { SyntheticEvent, useState } from "react";
 import InputError from "../_components/input-error";
+import { SignUpFormState } from "../api/signup/route";
 
-const initialState: SignUpFormState = {
-  status: "success",
-};
+const initialState: SignUpFormState = {};
+
+export const dynamic = "force-dynamic";
 
 export default function SignUp() {
-  const [state, formAction, pending] = useActionState(signUp, initialState);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [state, setState] = useState<SignUpFormState>(initialState);
+  async function onSubmit(event: SyntheticEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setIsLoading(true);
+    try {
+      const formData = new FormData(event.currentTarget);
+      const body = JSON.stringify(Object.fromEntries(formData));
+      const response = await fetch("/api/signup", {
+        method: "POST",
+        body,
+        credentials: "include",
+      });
+      if (response.ok) {
+        router.push("/dashboard");
+      }
+      const responseState = await response.json();
+      setState(responseState);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <Container size="1" pt="8">
-      <Form action={formAction}>
+      <form onSubmit={onSubmit}>
         <Flex gap="4" direction="column" justify="between" display="flex">
           <Heading as="h1" align="center">
             Sign Up
           </Heading>
-          <Label.Root className="LabelRoot" htmlFor="register-email">
+          <Label.Root className="LabelRoot" htmlFor="email">
             Email
           </Label.Root>
           <TextField.Root
-            id="register-email"
+            id="email"
             name="email"
             type="email"
             autoComplete="email"
@@ -41,23 +66,23 @@ export default function SignUp() {
             defaultValue={state?.data?.email}
           />
           <InputError inputError={state?.validation?.email} />
-          <Label.Root className="LabelRoot" htmlFor="register-username">
-            Username
+          <Label.Root className="LabelRoot" htmlFor="fullname">
+            Full Name
           </Label.Root>
           <TextField.Root
-            id="register-username"
-            name="username"
+            id="fullname"
+            name="fullname"
             type="text"
-            autoComplete="username"
-            placeholder="Usesrname"
-            defaultValue={state.data?.username}
+            autoComplete="name"
+            placeholder="Full Name"
+            defaultValue={state.data?.fullname}
           />
-          <InputError inputError={state?.validation?.username} />
-          <Label.Root className="LabelRoot" htmlFor="register-password">
+          <InputError inputError={state?.validation?.fullname} />
+          <Label.Root className="LabelRoot" htmlFor="password">
             Password
           </Label.Root>
           <TextField.Root
-            id="register-password"
+            id="password"
             name="password"
             type="password"
             placeholder="Password"
@@ -65,7 +90,7 @@ export default function SignUp() {
           />
           <InputError inputError={state?.validation?.password} />
           <Box width="100%" pt="2">
-            <Button type="submit" loading={pending}>
+            <Button type="submit" loading={isLoading}>
               <Pencil2Icon /> Sign Up
             </Button>
           </Box>
@@ -78,7 +103,7 @@ export default function SignUp() {
             </Callout.Root>
           )}
         </Flex>
-      </Form>
+      </form>
     </Container>
   );
 }

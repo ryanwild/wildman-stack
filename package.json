@@ -18,17 +18,22 @@
   "version": "0.0.1",
   "overrides": {
     "@esbuild-kit/core-utils": {
-      "esbuild": "^0.25.0"
+      "esbuild": "0.28.1"
+    },
+    "tsx": {
+      "esbuild": "0.28.1"
+    },
+    "drizzle-kit": {
+      "esbuild": "0.28.1"
     },
     "next": {
-      "postcss": "^8.5.14"
+      "postcss": "8.5.14"
     },
     "auth": {
       "@mrleebo/prisma-ast": "0.16.0"
     }
   },
   "workspaces": [
-    "auth",
     "backend",
     "shared",
     "userui"

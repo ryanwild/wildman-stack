@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-
-config_path="$(dirname "$(realpath "$0")")/../src/lib/auth.ts"
-npx auth@latest migrate --config="${config_path}
