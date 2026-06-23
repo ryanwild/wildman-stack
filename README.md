@@ -2,10 +2,11 @@
 
 A pre-configured dev environment with the following services:
 
-Backend: Yoga GraphQL / Postgres / Node.js
-Auth: BetterAuth / Postgres / Node.js
-UserUI: Next.js / BetterAuth / Raddix UI
-Ingress: Caddy HTTP server
+- Backend: Yoga GraphQL / Postgres / Node.js
+
+- UserUI: Next.js / BetterAuth / Raddix UI
+
+- Ingress: Caddy HTTP server
 
 This project is in active development and changing often.
 
