@@ -1,0 +1,286 @@
+.Root {
+  --sub-menu-width: 330px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  z-index: 1;
+  margin: var(--space-4);
+}
+
+.MenuList {
+  display: flex;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-4);
+  list-style: none;
+  margin: 0;
+  background-color: var(--color-panel-translucent);
+}
+
+.Trigger,
+.Link {
+  all: unset;
+  padding: 8px 12px;
+  outline: none;
+  user-select: none;
+  line-height: 1;
+  border-radius: var(--radius-4);
+  &:focus {
+    box-shadow: 0 0 0 2px var(--accent-4);
+  }
+  &:hover {
+    background-color: var(--accent-4);
+  }
+}
+
+.Trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.Link {
+  display: block;
+  text-decoration: none;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.Content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  animation-duration: 250ms;
+  animation-timing-function: ease;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  &[data-motion="from-start"] {
+    animation-name: enterFromLeft;
+  }
+  &[data-motion="from-end"] {
+    animation-name: enterFromRight;
+  }
+  &[data-motion="to-start"] {
+    animation-name: exitToLeft;
+  }
+  &[data-motion="to-end"] {
+    animation-name: exitToRight;
+  }
+  @media only screen and (min-width: 600px) {
+    width: auto;
+  }
+}
+
+.Indicator {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  height: 10px;
+  top: 100%;
+  overflow: hidden;
+  z-index: 1;
+  transition:
+    width,
+    transform 250ms ease;
+  &[data-state="visible"] {
+    animation: fadeIn 200ms ease;
+  }
+  &[data-state="hidden"] {
+    animation: fadeOut 200ms ease;
+  }
+}
+
+.ViewportPosition {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  width: 100%;
+  top: 100%;
+  left: 0;
+  perspective: 2000px;
+}
+
+.Viewport {
+  position: relative;
+  display: flex;
+  min-width: var(--sub-menu-width);
+  align-items: stretch;
+  transform-origin: top center;
+  margin-top: 10px;
+  background-color: var(--color-panel-solid);
+  border-radius: var(--radius-4);
+  border: 1px solid var(--accent-10);
+  overflow: hidden;
+  box-shadow:
+    hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+    hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+  height: var(--radix-navigation-menu-viewport-height);
+  transition:
+    width,
+    height,
+    300ms ease;
+  &[data-state="open"] {
+    animation: scaleIn 200ms ease;
+  }
+  &[data-state="closed"] {
+    animation: scaleOut 200ms ease;
+  }
+  @media only screen and (max-width: 600px) {
+    min-width: 200px;
+  }
+}
+
+.List {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  min-width: var(--sub-menu-width);
+  @media only screen and (max-width: 600px) {
+    min-width: 200px;
+  }
+}
+
+.ListItemLink {
+  all: unset;
+  cursor: pointer;
+  display: block;
+  outline: none;
+  text-decoration: none;
+  user-select: none;
+  padding: 12px;
+  border-radius: var(--radius-4);
+  font-size: 15px;
+  line-height: 1;
+  &:focus {
+    box-shadow: 0 0 0 2px var(--accent-4);
+  }
+  &:hover {
+    background-color: var(--accent-4);
+  }
+}
+
+.ListItemHeading {
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 5px;
+  color: var(--violet-12);
+}
+
+.ListItemText {
+  all: unset;
+  color: var(--grey-10);
+  line-height: 1.4;
+  font-weight: initial;
+  word-break: break-word;
+}
+
+.CaretDown {
+  position: relative;
+  color: var(--accent-10);
+  top: 1px;
+  transition: transform 250ms ease;
+  [data-state="open"] > & {
+    transform: rotate(-180deg);
+  }
+}
+
+.Arrow {
+  position: relative;
+  top: 70%;
+  background-color: var(--accent-10);
+  width: 10px;
+  height: 10px;
+  transform: rotate(45deg);
+  border-top-left-radius: 2px;
+}
+
+@keyframes enterFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(200px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes enterFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes exitToRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(200px);
+  }
+}
+
+@keyframes exitToLeft {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-200px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: rotateX(-30deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1);
+  }
+}
+
+@keyframes scaleOut {
+  from {
+    opacity: 1;
+    transform: rotateX(0deg) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: rotateX(-10deg) scale(0.95);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

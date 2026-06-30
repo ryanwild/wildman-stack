@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
+import { GlobalNavigation } from "./_components/GlobalNavigation/index";
 
 const headingMono = IBM_Plex_Mono({
   variable: "--font-heading",
@@ -28,11 +29,18 @@ export default function RootLayout({
       <body className={`${headingMono.variable}`}>
         <ThemeProvider attribute="class">
           <Theme
-            accentColor="amber"
+            accentColor="cyan"
             panelBackground="solid"
             radius="none"
             scaling="110%"
           >
+            <GlobalNavigation
+              data={[
+                {
+                  title: "Login",
+                },
+              ]}
+            />
             <main>{children}</main>
           </Theme>
         </ThemeProvider>

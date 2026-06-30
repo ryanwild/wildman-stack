@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import { Label } from "radix-ui";
 import { useState, SyntheticEvent } from "react";
-import InputError from "../_components/input-error";
+import InputError from "../_components/InputError/index";
 import { LoginFormState } from "../api/login/route";
 import { useRouter } from "next/navigation";
 

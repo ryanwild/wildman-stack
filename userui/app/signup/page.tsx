@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { Label } from "radix-ui";
 import { SyntheticEvent, useState } from "react";
-import InputError from "../_components/input-error";
+import InputError from "../_components/InputError/index";
 import { SignUpFormState } from "../api/signup/route";
 
 const initialState: SignUpFormState = {};
