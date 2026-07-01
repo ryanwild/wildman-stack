@@ -1,0 +1,14 @@
+.Button {
+  --theme-toggle-size: 32px;
+  display: block;
+  border: 1px solid var(--accent-10);
+  background-color: var(--color-panel-solid);
+  border-radius: 100%;
+  width: var(--theme-toggle-size);
+  height: var(--theme-toggle-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+}

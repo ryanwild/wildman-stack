@@ -1,13 +1,15 @@
-import { Theme } from "@radix-ui/themes";
+import { Theme, Container } from "@radix-ui/themes";
 import "@radix-ui/themes/layout.css";
 import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
-import { IBM_Plex_Mono } from "next/font/google";
+import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
+import styles from "./layout.module.css";
 import { ThemeProvider } from "next-themes";
 import { GlobalNavigation } from "./_components/GlobalNavigation/index";
+import { ThemeToggle } from "./_components/ThemeToggle";
 
-const headingMono = IBM_Plex_Mono({
+const headingMono = IBM_Plex_Sans({
   variable: "--font-heading",
   style: "normal",
   subsets: ["latin"],
@@ -30,18 +32,17 @@ export default function RootLayout({
         <ThemeProvider attribute="class">
           <Theme
             accentColor="cyan"
-            panelBackground="solid"
-            radius="none"
+            radius="medium"
             scaling="110%"
+            hasBackground={false}
           >
-            <GlobalNavigation
-              data={[
-                {
-                  title: "Login",
-                },
-              ]}
-            />
-            <main>{children}</main>
+            <Container p="6" size="4">
+              <GlobalNavigation />
+              <ThemeToggle className={styles.ThemeToggleButton} />
+              <main>
+                <Container p="6">{children}</Container>
+              </main>
+            </Container>
           </Theme>
         </ThemeProvider>
       </body>

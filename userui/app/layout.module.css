@@ -1,0 +1,5 @@
+.ThemeToggleButton {
+  position: fixed;
+  top: var(--space-6);
+  right: var(--space-5);
+}

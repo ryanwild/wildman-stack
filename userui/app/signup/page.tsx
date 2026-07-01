@@ -48,7 +48,7 @@ export default function SignUp() {
   }
 
   return (
-    <Container size="1" pt="8">
+    <Container size="4" maxWidth="400px" pt="8">
       <form onSubmit={onSubmit}>
         <Flex gap="4" direction="column" justify="between" display="flex">
           <Heading as="h1" align="center">

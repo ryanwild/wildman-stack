@@ -2,26 +2,20 @@
 
 import { NavigationMenu } from "radix-ui";
 import classNames from "classnames";
-import { CaretDownIcon } from "@radix-ui/react-icons";
+import { CaretDownIcon, HomeIcon } from "@radix-ui/react-icons";
 import styles from "./style.module.css";
 import { Ref, useRef } from "react";
 
-export type NavigationProps = {
-  title: string;
-  href?: string;
-  children?: NavigationProps[];
-};
-
-export type GlobalNavigationProps = {
-  data: NavigationProps[];
-};
-
-export const GlobalNavigation = ({ data }: GlobalNavigationProps) => {
-  console.log(data);
+export const GlobalNavigation = () => {
   const navRef = useRef(null);
   const nav = (
-    <NavigationMenu.Root className={styles.Root} data-radius="medium">
+    <NavigationMenu.Root className={styles.Root}>
       <NavigationMenu.List className={styles.MenuList}>
+        <NavigationMenu.Item>
+          <NavigationMenu.Link className={styles.Link} href="/">
+            <HomeIcon />
+          </NavigationMenu.Link>
+        </NavigationMenu.Item>
         <NavigationMenu.Item>
           <NavigationMenu.Link
             className={styles.Link}
